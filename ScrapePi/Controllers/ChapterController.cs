@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using ScrapePI.Helpers;
 using ScrapePI.Models;
 
 namespace ScrapePI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ChapterController : ControllerBase
     {
 
@@ -34,7 +32,7 @@ namespace ScrapePI.Controllers
             web.OverrideEncoding = Encoding.GetEncoding("iso-8859-1");
 
             string basePath = Constants.SiteUrl;
-            string realPath = Path.Combine(basePath, lang, type, series, book, chapter, extention).Replace("\\", "/");
+            string realPath = Path.Combine(basePath, lang, type, series, book, chapter).Replace("\\", "/") + "." + extention;
 
             var nameList = web.Load(realPath);
             var ib = nameList.DocumentNode.Descendants("p").ToList().FindAll(x => x.InnerHtml.Contains("</big>"));
