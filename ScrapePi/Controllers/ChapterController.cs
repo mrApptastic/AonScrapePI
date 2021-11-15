@@ -34,6 +34,9 @@ namespace ScrapePI.Controllers
             string basePath = Constants.SiteUrl;
             string realPath = Path.Combine(basePath, lang, type, series, book, chapter).Replace("\\", "/") + "." + extention;
 
+            if (basePath == Constants.LocalUrl) {
+                realPath = Path.Combine(Directory.GetCurrentDirectory(), realPath).Replace("\\", "/");
+            }
             var site = web.Load(realPath);
 
             var storyNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[not(@class='choice')]").ToList();
