@@ -28,18 +28,48 @@ namespace ScrapePI.Controllers
         public ActionResult<ChapterDto> GetChapter([FromRoute] string series, [FromRoute] string book, [FromRoute] string chapter, [FromQuery] string lang = "en", [FromQuery] string type = "xhtml", [FromQuery] string extention = "htm")
         {
             HtmlWeb web = new HtmlWeb();
-            web.AutoDetectEncoding = false;
+            web.AutoDetectEncoding = true;
             web.OverrideEncoding = Encoding.GetEncoding("iso-8859-1");
 
             string basePath = Constants.SiteUrl;
             string realPath = Path.Combine(basePath, lang, type, series, book, chapter).Replace("\\", "/") + "." + extention;
 
-            var nameList = web.Load(realPath);
-            var ib = nameList.DocumentNode.Descendants("p").ToList().FindAll(x => x.InnerHtml.Contains("</big>"));
+            var site = web.Load(realPath);
 
-            return Ok(new ChapterDto {
-                NodeId = 0
-            });
+            var storyNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[not(@class='choice')]").ToList();
+
+            var choiceNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']").ToList();
+
+            var chapterDto = new ChapterDto {
+                ChapterId = chapter,
+                BookId = book,
+                SeriesId = series,
+                Story = new List<StoryDto>(),
+                Combat = new List<CombatDto>(),
+                Choice = new List<ChoiceDto>()                
+            };
+
+            foreach (var story in storyNodes) {
+                if (story.InnerHtml.ToUpper().Contains("COMBAT")) {
+                    chapterDto.Combat.Add(new CombatDto() {
+                        Text = story.InnerHtml
+                    });
+                } else {
+                    chapterDto.Story.Add(new StoryDto() {
+                        Text = story.InnerHtml
+                    });
+                }
+   
+            }
+
+            foreach (var choice in choiceNodes) {
+                chapterDto.Choice.Add(new ChoiceDto() {
+                    Text = choice.InnerHtml,
+                    ChapterId = choice.SelectSingleNode("//a").GetAttributeValue("href", "")
+                });
+            }
+
+            return Ok(chapterDto);
         }
 
      
