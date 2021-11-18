@@ -29,7 +29,7 @@ namespace ScrapePI.Controllers
         {
             HtmlWeb web = new HtmlWeb();
             web.AutoDetectEncoding = true;
-            web.OverrideEncoding = Encoding.GetEncoding("iso-8859-1");
+            web.OverrideEncoding = Encoding.UTF8;
 
             string basePath = Constants.SiteUrl;
             string realPath = Path.Combine(basePath, lang, type, series, book, chapter).Replace("\\", "/") + "." + extention;
