@@ -24,16 +24,29 @@ namespace ScrapePI.Controllers
         [HttpGet("{series}/{book}/{file}")]
         public ActionResult<ImageDto> GetAsset([FromRoute] string series, [FromRoute] string book, [FromRoute] string file, [FromQuery] string lang = "en", [FromQuery] string type = "xhtml")
         {
-            // HtmlWeb web = new HtmlWeb();
-            // web.AutoDetectEncoding = false;
-            // web.OverrideEncoding = Encoding.GetEncoding("iso-8859-1");
-
             string basePath = Constants.SiteUrl;
             string realPath = Path.Combine(basePath, lang, type, series, book, file).Replace("\\", "/");
             return Ok(new ImageDto {
                 Title = file.Split(".")[0],
                 Url = GetDataUrl(realPath, (basePath == Constants.LocalUrl))
             });
+        }
+
+        [HttpPost("{series}/{book}")]
+        public ActionResult<List<ImageDto>> GetAssets([FromRoute] string series, [FromRoute] string book, [FromBody] List<ImageSearchDto> search, [FromQuery] string lang = "en", [FromQuery] string type = "xhtml")
+        {
+            var images = new List<ImageDto>();
+            string basePath = Constants.SiteUrl;
+
+            foreach (var file in search) {
+                string realPath = Path.Combine(basePath, lang, type, series, book, file.File).Replace("\\", "/");
+                images.Add(new ImageDto {
+                    Title = file.File.Split(".")[0],
+                    Url = GetDataUrl(realPath, (basePath == Constants.LocalUrl))
+                });
+            }
+
+            return images;
         }
 
         private string GetDataUrl (string path, bool localPath = false) {

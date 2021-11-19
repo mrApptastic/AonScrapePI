@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "022440d1-4dbe-4f5f-8a13-07659806d66f",
+		"name": "Aon ScapePi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/assets/lw/01fftd/bsword.png",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"assets",
+						"lw",
+						"01fftd",
+						"bsword.png"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Images",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    { \"file\": \"acbckpck.gif\"},\r\n        { \"file\": \"crtneg.gif\"},\r\n            { \"file\": \"bsword.png\"},\r\n                { \"file\": \"dagger.png\"}\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/assets/lw/01fftd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"assets",
+						"lw",
+						"01fftd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Chapter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/chapter/lw/01fftd/sect74",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"chapter",
+						"lw",
+						"01fftd",
+						"sect74"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
