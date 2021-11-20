@@ -18,7 +18,6 @@ namespace ScrapePI.Controllers
 
         private readonly ILogger<ChapterController> _logger;
 
-
          public ChapterController(ILogger<ChapterController> logger)
         {
             _logger = logger;
@@ -39,23 +38,29 @@ namespace ScrapePI.Controllers
             }
             var site = web.Load(realPath);
 
-            var storyNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[not(@class='choice')]").ToList();
+            var storyNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[not(@class='choice')]")?.ToList();
 
-            var choiceNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']").ToList();
+            var imageNodes = site.DocumentNode.SelectNodes("//img[@alt='[illustration]']")?.ToList();
+
+            var choiceNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']")?.ToList();
 
             var chapterDto = new ChapterDto {
                 ChapterId = chapter,
                 BookId = book,
                 SeriesId = series,
                 Story = new List<StoryDto>(),
+                Illustration = new List<ImageDto>(),
                 Combat = new List<CombatDto>(),
                 Choice = new List<ChoiceDto>()                
             };
 
             foreach (var story in storyNodes) {
-                if (story.InnerHtml.ToUpper().Contains("COMBAT")) {
-                    chapterDto.Combat.Add(new CombatDto() {
-                        Text = story.InnerHtml
+                if (story.InnerHtml.ToUpper().Contains("COMBAT SKILL") &&
+                    story.InnerHtml.ToUpper().Contains("ENDURANCE")) {
+                      chapterDto.Combat.Add(new CombatDto() {
+                        Text = story.InnerHtml,
+                        CombatSkill = parseCombatSkill(story.InnerHtml),
+                        Endurance = parseEndurance(story.InnerHtml)
                     });
                 } else {
                     chapterDto.Story.Add(new StoryDto() {
@@ -65,15 +70,46 @@ namespace ScrapePI.Controllers
    
             }
 
-            foreach (var choice in choiceNodes) {
+            if (imageNodes != null) {
+                foreach (var image in imageNodes) {
+                    string img = image.GetAttributeValue("src", "");
+
+                    string path = Constants.SiteUrl;
+                    string extPath = Path.Combine(Constants.SiteUrl, lang, type, series, book, img).Replace("\\", "/");
+
+                    chapterDto.Illustration.Add(new ImageDto() {
+                        Title = img.Split(".")[0],
+                        Url = ImageHelper.ConvertToDataUrl(extPath, path == Constants.LocalUrl) 
+                    });
+                }
+            }
+           
+            int index = 0;
+
+            foreach (var choice in choiceNodes) {                
                 chapterDto.Choice.Add(new ChoiceDto() {
                     Text = choice.InnerHtml,
-                    ChapterId = site.DocumentNode.SelectSingleNode("//div[@class='maintext']//p[@class='choice']//a").GetAttributeValue("href", "").Split(".")[0]
+                    ChapterId = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']//a")[index].GetAttributeValue("href", "").Split(".")[0]
                 });
+
+                index++;
             }
 
             return Ok(chapterDto);
         }
+
+        private int parseCombatSkill (string combatNode) {
+            string baseNode = combatNode.Split("COMBAT SKILL</span>")[1].Split("<span")[0].Trim();
+            int.TryParse(baseNode, out int ib);
+            return ib;
+        }
+
+        private int parseEndurance (string combatNode) {
+            string baseNode = combatNode.Split("ENDURANCE</span>")[1].Trim();
+            int.TryParse(baseNode, out int ib);
+            return ib;
+        }
+
 
      
     }
