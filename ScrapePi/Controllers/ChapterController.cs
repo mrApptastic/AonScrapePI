@@ -68,7 +68,7 @@ namespace ScrapePI.Controllers
             foreach (var choice in choiceNodes) {
                 chapterDto.Choice.Add(new ChoiceDto() {
                     Text = choice.InnerHtml,
-                    ChapterId = choice.SelectSingleNode("//a").GetAttributeValue("href", "")
+                    ChapterId = site.DocumentNode.SelectSingleNode("//div[@class='maintext']//p[@class='choice']//a").GetAttributeValue("href", "").Split(".")[0]
                 });
             }
 
