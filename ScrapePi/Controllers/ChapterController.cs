@@ -73,13 +73,10 @@ namespace ScrapePI.Controllers
             if (imageNodes != null) {
                 foreach (var image in imageNodes) {
                     string img = image.GetAttributeValue("src", "");
-
-                    string path = Constants.SiteUrl;
-                    string extPath = Path.Combine(Constants.SiteUrl, lang, type, series, book, img).Replace("\\", "/");
-
+                     string extPath = Path.Combine(basePath, lang, type, series, book, img).Replace("\\", "/");
                     chapterDto.Illustration.Add(new ImageDto() {
                         Title = img.Split(".")[0],
-                        Url = ImageHelper.ConvertToDataUrl(extPath, path == Constants.LocalUrl) 
+                        Url = ImageHelper.ConvertToDataUrl(extPath, basePath == Constants.LocalUrl) 
                     });
                 }
             }
