@@ -83,14 +83,17 @@ namespace ScrapePI.Controllers
            
             int index = 0;
 
-            foreach (var choice in choiceNodes) {                
-                chapterDto.Choice.Add(new ChoiceDto() {
-                    Text = choice.InnerHtml,
-                    ChapterId = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']//a")[index].GetAttributeValue("href", "").Split(".")[0]
-                });
+            if (choiceNodes != null) {
+                foreach (var choice in choiceNodes) {                
+                    chapterDto.Choice.Add(new ChoiceDto() {
+                        Text = choice.InnerHtml,
+                        ChapterId = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']//a")[index].GetAttributeValue("href", "").Split(".")[0]
+                    });
 
-                index++;
+                    index++;
+                }
             }
+
 
             return Ok(chapterDto);
         }
