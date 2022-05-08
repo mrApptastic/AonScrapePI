@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Oleo+Script+Swash+Caps:wght@700&display=swap');
+
+:root {
+  font-size: 20px;
+  --primary: #cccc99;
+  --secondary: #7f7f4c;
+  --tertiary: #333300;
+  --headingFont: 'Oleo Script Swash Caps', cursive;
+  --paragraphFont: 'Archivo Narrow', sans-serif;
+}
+
+body {
+  background: var(--primary);
+  color: var(--secondary);
+  font-family: var(--paragraphFont);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--headingFont);
+}
+
+p.choice:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
