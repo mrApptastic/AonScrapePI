@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Hello from './Hello';
-import DataView from './Data';
 import HeaderView from './Header';
 import PageView from './Page';
-import MainView from './MainView';
 import './style.css';
 
 interface AppProps {}

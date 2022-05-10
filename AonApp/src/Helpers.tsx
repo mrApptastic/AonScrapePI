@@ -36,6 +36,7 @@ export function storeStoryState(series, book, chapter): any {
     book: book,
     chapter: chapter,
   };
+
   localStorage.setItem('storyState', JSON.stringify(obj));
 }
 
@@ -55,8 +56,6 @@ export function getStoryState(): any {
       console.log(e);
     }
   }
-
-  console.log(currentState);
 
   return currentState;
 }

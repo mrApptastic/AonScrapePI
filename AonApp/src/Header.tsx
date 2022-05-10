@@ -18,10 +18,13 @@ function HeaderView() {
   }
 
   useEffect(() => {
-    getHeader('lw', '01fftd', 'title.png');
+    const state = Helpers.getStoryState();
+    if (state?.book) {
+      getHeader('lw', state.book, 'title.png');
+    } else {
+      getHeader('lw', '01fftd', 'title.png');
+    }
   }, []);
-
-  useEffect(() => {}, []);
 
   return (
     <section className="container-fluid">

@@ -5,10 +5,9 @@ function PageView() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState(null);
-  const [book, setBook] = useState('01fftd');
   const series = 'lw';
 
-  function setChapter(chapter) {
+  function setChapter(chapter, book) {
     setIsLoaded(false);
     Helpers.storeStoryState(series, book, chapter);
     Helpers.getChapter(series, book, chapter)
@@ -19,88 +18,88 @@ function PageView() {
           if (!(result?.choice?.length > 0)) {
             let text = 'Restart this book';
             if (book === '01fftd' && chapter === 'sect350') {
-              setBook('02fotw');
+              book = '02fotw';
               text = 'Move on to the next book';
             } else if (book === '02fotw' && chapter === 'sect350') {
-              setBook('03tcok');
+              book = '03tcok';
               text = 'Move on to the next book';
             } else if (book === '03tcok' && chapter === 'sect350') {
-              setBook('04tcod');
+              book = '04tcod';
               text = 'Move on to the next book';
             } else if (book === '04tcod' && chapter === 'sect350') {
-              setBook('05sots');
+              book = '05sots';
               text = 'Move on to the next book';
             } else if (book === '05sots' && chapter === 'sect400') {
-              setBook('06tkot');
+              book = '06tkot';
               text = 'Move on to the next book';
             } else if (book === '06tkot' && chapter === 'sect350') {
-              setBook('07cd');
+              book = '07cd';
               text = 'Move on to the next book';
             } else if (book === '07cd' && chapter === 'sect350') {
-              setBook('08tjoh');
+              book = '08tjoh';
               text = 'Move on to the next book';
             } else if (book === '08tjoh' && chapter === 'sect350') {
-              setBook('09tcof');
+              book = '09tcof';
               text = 'Move on to the next book';
             } else if (book === '09tcof' && chapter === 'sect350') {
-              setBook('10tdot');
+              book = '10tdot';
               text = 'Move on to the next book';
             } else if (book === '10tdot' && chapter === 'sect350') {
-              setBook('11tpot');
+              book = '11tpot';
               text = 'Move on to the next book';
             } else if (book === '11tpot' && chapter === 'sect350') {
-              setBook('12tmod');
+              book = '12tmod';
               text = 'Move on to the next book';
             } else if (book === '12tmod' && chapter === 'sect350') {
-              setBook('13tplor');
+              book = '13tplor';
               text = 'Move on to the next book';
             } else if (book === '13tplor' && chapter === 'sect350') {
-              setBook('14tcok');
+              book = '14tcok';
               text = 'Move on to the next book';
             } else if (book === '14tcok' && chapter === 'sect350') {
-              setBook('15tdc');
+              book = '15tdc';
               text = 'Move on to the next book';
             } else if (book === '15tdc' && chapter === 'sect350') {
-              setBook('16tlov');
+              book = '16tlov';
               text = 'Move on to the next book';
             } else if (book === '16tlov' && chapter === 'sect350') {
-              setBook('17tdoi');
+              book = '17tdoi';
               text = 'Move on to the next book';
             } else if (book === '17tdoi' && chapter === 'sect350') {
-              setBook('18dotd');
+              book = '18dotd';
               text = 'Move on to the next book';
             } else if (book === '18dotd' && chapter === 'sect350') {
-              setBook('19wb');
+              book = '19wb';
               text = 'Move on to the next book';
             } else if (book === '19wb' && chapter === 'sect350') {
-              setBook('20tcon');
+              book = '20tcon';
               text = 'Move on to the next book';
             } else if (book === '20tcon' && chapter === 'sect350') {
-              setBook('21votm');
+              book = '21votm';
               text = 'Move on to the next book';
             } else if (book === '21votm' && chapter === 'sect350') {
-              setBook('22tbos');
+              book = '22tbos';
               text = 'Move on to the next book';
             } else if (book === '22tbos' && chapter === 'sect350') {
-              setBook('23mh');
+              book = '23mh';
               text = 'Move on to the next book';
             } else if (book === '23mh' && chapter === 'sect350') {
-              setBook('24rw');
+              book = '24rw';
               text = 'Move on to the next book';
             } else if (book === '24rw' && chapter === 'sect350') {
-              setBook('25totw');
+              book = '25totw';
               text = 'Move on to the next book';
             } else if (book === '25totw' && chapter === 'sect350') {
-              setBook('26tfobm');
+              book = '26tfobm';
               text = 'Move on to the next book';
             } else if (book === '26tfobm' && chapter === 'sect350') {
-              setBook('27v');
+              book = '27v';
               text = 'Move on to the next book';
-            } else if (book === '28thos' && chapter === 'sect350') {
-              setBook('28thos');
+            } else if (book === '27v' && chapter === 'sect350') {
+              book = '28thos';
               text = 'Move on to the next book';
             } else if (book === '28thos' && chapter === 'sect300') {
-              setBook('01fftd');
+              book = '01fftd';
               text = 'Restart the entire series';
             }
 
@@ -110,6 +109,11 @@ function PageView() {
             });
           }
 
+          for (const choice of result.choice) {
+            choice.book = book;
+          }
+
+          console.log(result);
           setData(result);
         },
         (error) => {
@@ -121,12 +125,10 @@ function PageView() {
 
   useEffect(() => {
     const state = Helpers.getStoryState();
-    console.log(state);
     if (state?.book && state?.chapter) {
-      setBook(state.book);
-      setChapter(state.chapter);
+      setChapter(state.chapter, state.book);
     } else {
-      setChapter('sect1');
+      setChapter('sect1', '01fftd');
     }
   }, []);
 
@@ -140,23 +142,22 @@ function PageView() {
         <div className="row">
           <div>
             {data?.illustration.map((item) => (
-              <img src={item?.url} alt={item?.text} />
+              <img src={item?.url} alt={item?.text} key={item?.text} />
             ))}
           </div>
           <div>
             {data?.story.map((item) => (
-              <div>
-                <p key={item.text}>{Helpers.stripHtml(item.text)}</p>
+              <div key={item.text}>
+                <p>{Helpers.stripHtml(item.text)}</p>
               </div>
             ))}
           </div>
           <div>
             {data?.choice.map((item) => (
-              <div>
+              <div key={item.text}>
                 <p
                   className="choice"
-                  onClick={() => setChapter(item?.chapterId)}
-                  key={item.text}
+                  onClick={() => setChapter(item?.chapterId, item?.book)}
                 >
                   {Helpers.stripHtml(item.text)}
                 </p>
