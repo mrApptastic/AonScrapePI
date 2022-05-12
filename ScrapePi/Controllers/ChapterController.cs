@@ -91,7 +91,7 @@ namespace ScrapePI.Controllers
                         if (link.Contains("sect") && !chapterDto.Choice.Select(x => x.Text).Contains(choice.InnerHtml) && !chapterDto.Choice.Select(x => x.ChapterId).Contains(link)) {
                             chapterDto.Choice.Add(new ChoiceDto() {
                                 Text = choice.InnerHtml,
-                                ChapterId = link
+                                ChapterId = link.Split(".")[0]
                             });
                         } 
                     }    
