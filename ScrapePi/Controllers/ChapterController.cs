@@ -40,7 +40,7 @@ namespace ScrapePI.Controllers
 
             var storyNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[not(@class='choice')]")?.ToList();
 
-            var imageNodes = site.DocumentNode.SelectNodes("//img[@alt='[illustration]']")?.ToList();
+            var imageNodes = site.DocumentNode.SelectNodes("//img")?.ToList();
 
             var choiceNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']")?.ToList();
 
@@ -72,25 +72,29 @@ namespace ScrapePI.Controllers
 
             if (imageNodes != null) {
                 foreach (var image in imageNodes) {
-                    string img = image.GetAttributeValue("src", "");
-                     string extPath = Path.Combine(basePath, lang, type, series, book, img).Replace("\\", "/");
-                    chapterDto.Illustration.Add(new ImageDto() {
-                        Title = img.Split(".")[0],
-                        Url = ImageHelper.ConvertToDataUrl(extPath, basePath == Constants.LocalUrl) 
-                    });
+                    if (image.GetAttributeValue("alt", "") == "illustration") {
+                        string img = image.GetAttributeValue("src", "");                            
+                        string extPath = Path.Combine(basePath, lang, type, series, book, img).Replace("\\", "/");
+                        chapterDto.Illustration.Add(new ImageDto() {
+                            Title = img.Split(".")[0],
+                            Url = ImageHelper.ConvertToDataUrl(extPath, basePath == Constants.LocalUrl) 
+                        });
+                    }    
                 }
             }
-           
-            int index = 0;
 
             if (choiceNodes != null) {
-                foreach (var choice in choiceNodes) {                
-                    chapterDto.Choice.Add(new ChoiceDto() {
-                        Text = choice.InnerHtml,
-                        ChapterId = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']//a")[index].GetAttributeValue("href", "").Split(".")[0]
-                    });
-
-                    index++;
+                foreach (var choice in choiceNodes) {
+                    var innerNodes = choice.SelectNodes("//a");
+                    foreach (var innerNode in innerNodes) {
+                        string link = innerNode.GetAttributeValue("href", "");
+                        if (link.Contains("sect") && !chapterDto.Choice.Select(x => x.ChapterId).Contains(link)) {
+                            chapterDto.Choice.Add(new ChoiceDto() {
+                                Text = innerNode.OuterHtml,
+                                ChapterId = link
+                            });
+                        } 
+                    }    
                 }
             }
 
