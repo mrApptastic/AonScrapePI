@@ -88,16 +88,15 @@ namespace ScrapePI.Controllers
                     var innerNodes = choice.SelectNodes("//a");
                     foreach (var innerNode in innerNodes) {
                         string link = innerNode.GetAttributeValue("href", "");
-                        if (link.Contains("sect") && !chapterDto.Choice.Select(x => x.ChapterId).Contains(link)) {
+                        if (link.Contains("sect") && !chapterDto.Choice.Select(x => x.Text).Contains(choice.InnerHtml) && !chapterDto.Choice.Select(x => x.ChapterId).Contains(link)) {
                             chapterDto.Choice.Add(new ChoiceDto() {
-                                Text = innerNode.OuterHtml,
+                                Text = choice.InnerHtml,
                                 ChapterId = link
                             });
                         } 
                     }    
                 }
             }
-
 
             return Ok(chapterDto);
         }
