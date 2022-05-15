@@ -29,7 +29,7 @@ function HeaderView() {
   return (
     <section className="container-fluid">
       <div className="row">
-        <div>
+        <div className="title-bar">
           <img src={dataHeader?.url} alt="Loading Header..." />
         </div>
       </div>

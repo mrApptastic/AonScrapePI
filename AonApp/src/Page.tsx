@@ -140,7 +140,7 @@ function PageView() {
     return (
       <section className="container-fluid">
         <div className="row">
-          <div>
+          <div className="illustration">
             {data?.illustration.map((item) => (
               <img src={item?.url} alt={item?.text} key={item?.text} />
             ))}

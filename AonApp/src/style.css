@@ -25,3 +25,13 @@ p.choice:hover {
   font-weight: bold;
   cursor: pointer;
 }
+
+div.title-bar {
+  width: 100%;
+  overflow: hidden;
+}
+
+div.illustration img {
+  width: 100%;
+  height: auto;
+}
