@@ -40,7 +40,8 @@ namespace ScrapePI.Controllers
 
             var storyNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[not(@class='choice')]")?.ToList();
 
-            var imageNodes = site.DocumentNode.SelectNodes("//img")?.ToList();
+            var imageNodes = site.DocumentNode.SelectNodes("//img[@alt='[illustration]']")?.ToList();
+            var moreImages = site.DocumentNode.SelectNodes("//img")?.ToList();         
 
             var choiceNodes = site.DocumentNode.SelectNodes("//div[@class='maintext']//p[@class='choice']")?.ToList();
 
@@ -72,6 +73,17 @@ namespace ScrapePI.Controllers
 
             if (imageNodes != null) {
                 foreach (var image in imageNodes) {
+                    string img = image.GetAttributeValue("src", "");
+                    string extPath = Path.Combine(basePath, lang, type, series, book, img).Replace("\\", "/");
+                    chapterDto.Illustration.Add(new ImageDto() {
+                        Title = img.Split(".")[0],
+                        Url = ImageHelper.ConvertToDataUrl(extPath, basePath == Constants.LocalUrl) 
+                    });
+                }
+            }
+
+            if (moreImages != null) {
+                foreach (var image in moreImages) {
                     if (image.GetAttributeValue("alt", "") == "illustration") {
                         string img = image.GetAttributeValue("src", "");                            
                         string extPath = Path.Combine(basePath, lang, type, series, book, img).Replace("\\", "/");
