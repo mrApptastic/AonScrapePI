@@ -113,7 +113,6 @@ function PageView() {
             choice.book = book;
           }
 
-          console.log(result);
           setData(result);
         },
         (error) => {
@@ -153,6 +152,13 @@ function PageView() {
             ))}
           </div>
           <div>
+            {data?.combat.map((item) => (
+              <em key={item.text}>
+                <p>{Helpers.stripHtml(item.text)}</p>
+              </em>
+            ))}
+          </div>
+          <div>
             {data?.choice.map((item) => (
               <div key={item.text}>
                 <p
@@ -171,6 +177,10 @@ function PageView() {
 }
 
 class PageList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return <PageView />;
   }

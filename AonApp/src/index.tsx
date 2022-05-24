@@ -5,23 +5,30 @@ import PageView from './Page';
 import './style.css';
 
 interface AppProps {}
+
 interface AppState {
-  name: string;
+  book: string;
 }
 
 class App extends Component<AppProps, AppState> {
   constructor(props) {
     super(props);
     this.state = {
-      name: 'React',
+      book: '01fftd',
     };
+    this.bookChangeEvent = this.bookChangeEvent.bind(this);
+  }
+
+  bookChangeEvent(event) {
+    this.setState({ book: event });
+    // alert(event);
   }
 
   render() {
     return (
       <div>
         <HeaderView />
-        <PageView />
+        <PageView changeBook={this.bookChangeEvent} />
       </div>
     );
   }

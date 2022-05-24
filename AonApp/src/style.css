@@ -32,6 +32,16 @@ div.title-bar {
 }
 
 div.illustration img {
-  width: 100%;
+  width: 400px;
+  margin-left: 1rem;
   height: auto;
+  float: right;
+}
+
+@media only screen and (max-width: 500px) {
+  div.illustration img {
+    width: 100%;
+    margin-left: 0;
+    float: none;
+  }
 }
